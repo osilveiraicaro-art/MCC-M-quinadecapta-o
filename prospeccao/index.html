@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#13286B">
+<title>Prospecção · Máquina de Captação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Ferramenta interna: formulário fixo à esquerda, mensagens geradas à direita. Mesmas cores da página de vendas. */
+:root{
+  --bg:#F3F5FA; --surface:#FFFFFF; --ink:#0B1330; --muted:#4D5675; --line:#DDE2EE;
+  --navy:#13286B; --navy-deep:#0B1A4A; --red:#E3262E; --yellow:#FFC814; --yellow-ink:#0A0A0A; --green:#1E9E52; --soft:#E7ECF8;
+  --f-body:"Audit Sans","Archivo","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+h1,h2,h3{margin:0;letter-spacing:-.02em;line-height:1.15}
+p{margin:0}
+.top{background:var(--navy-deep);color:#F4F5F8;padding:16px max(20px, env(safe-area-inset-left, 0px))}
+.top .in{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.top h1{font-size:1.15rem;font-weight:900}
+.top span{font-family:var(--f-mono);font-size:.74rem;color:#B7C1DD}
+.layout{max-width:1200px;margin:0 auto;padding:28px max(20px, env(safe-area-inset-right, 0px)) 60px max(20px, env(safe-area-inset-left, 0px));display:grid;grid-template-columns:380px 1fr;gap:28px;align-items:start}
+.layout > *{min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
+form.card{position:sticky;top:16px;display:flex;flex-direction:column;gap:12px}
+.lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--red)}
+label{font-weight:700;font-size:.88rem;display:flex;flex-direction:column;gap:6px}
+label small{font-weight:500;color:var(--muted)}
+input,select{font:inherit;font-weight:500;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+input:focus,select:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px var(--soft)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row > *{min-width:0}
+hr{border:0;border-top:1px dashed var(--line);margin:4px 0;width:100%}
+.out{display:flex;flex-direction:column;gap:18px}
+.link-card{background:var(--navy);color:#F4F5F8;border:0}
+.link-card .lbl{color:var(--yellow)}
+.link-card code{display:block;font-family:var(--f-mono);font-size:.82rem;word-break:break-all;background:rgba(255,255,255,.08);border-radius:10px;padding:12px;margin:10px 0 12px}
+.group-title{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:6px}
+.group-title h2{font-size:1.25rem;font-weight:900}
+.group-title p{color:var(--muted);font-size:.92rem}
+.msg{display:flex;flex-direction:column;gap:10px}
+.msg-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.msg-head h3{font-size:1rem;font-weight:800}
+.when{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;background:var(--soft);color:var(--navy);padding:3px 9px;border-radius:99px;font-weight:700;white-space:nowrap}
+.bubble{background:#DCF5E6;border-radius:12px;border-top-right-radius:4px;padding:12px 14px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.95rem}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:800;font-size:.88rem;border:0;border-radius:99px;padding:9px 16px;cursor:pointer;text-decoration:none;background:var(--navy);color:#fff}
+.btn.wa{background:var(--green)}
+.btn.yellow{background:var(--yellow);color:var(--yellow-ink)}
+.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.btn.done{background:var(--red)}
+.btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
+.tip{font-size:.86rem;color:var(--muted);border-left:3px solid var(--yellow);padding-left:12px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}form.card{position:static}}
+@media (max-width:480px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in"><h1>Prospecção ativa</h1><span>Ferramenta interna · não compartilhe este link</span></div></header>
+
+<div class="layout">
+  <form class="card" id="f" autocomplete="off">
+    <span class="lbl">Você</span>
+    <label for="eu">Seu nome<small>Fica salvo neste navegador</small><input id="eu" placeholder="Ex.: Ícaro"></label>
+    <hr>
+    <span class="lbl">Contato</span>
+    <div class="row">
+      <label for="trat">Tratamento<select id="trat"><option value="">Nenhum</option><option>Dra.</option><option>Dr.</option></select></label>
+      <label for="nome">Primeiro nome<input id="nome" placeholder="Ana"></label>
+    </div>
+    <label for="area">Área<select id="area"></select></label>
+    <label for="termo">Termo que você pesquisou no Google<input id="termo"></label>
+    <label for="cidade">Cidade ou bairro<input id="cidade" placeholder="Florianópolis"></label>
+    <label for="obs">O que você viu no Google
+      <select id="obs">
+        <option value="nao">Não aparece entre os primeiros</option>
+        <option value="abaixo">Aparece, mas abaixo dos concorrentes</option>
+        <option value="aval">Tem poucas avaliações</option>
+        <option value="site">Não tem site ou página própria</option>
+      </select>
+    </label>
+    <label for="conc">Avaliações dos concorrentes do topo<small>Opcional. Ex.: 40</small><input id="conc" inputmode="numeric"></label>
+    <label for="tel">WhatsApp do contato<small>Opcional. Libera o botão "Abrir no WhatsApp"</small><input id="tel" type="tel" inputmode="tel" placeholder="(48) 99999-9999"></label>
+  </form>
+
+  <div class="out">
+    <div class="card link-card">
+      <span class="lbl">Link personalizado do diagnóstico</span>
+      <code id="link"></code>
+      <div class="actions"><button type="button" class="btn yellow" data-copy="link">Copiar link</button></div>
+    </div>
+
+    <div class="group-title"><h2>Sequência</h2><p>Mande uma de cada vez. Pare depois da última tentativa.</p></div>
+    <div id="seq" class="out"></div>
+
+    <div class="group-title"><h2>Quebra de objeções</h2><p>Respostas para quando o contato responder.</p></div>
+    <div id="obj" class="out"></div>
+
+    <p class="tip">Prospecte manualmente, de 20 a 40 contatos por dia, de preferência num número separado do principal. Disparo em massa leva a bloqueio do número.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var AREAS = {
+    "Odontologia":    { termo: "dentista",               plural: "dentistas",               cli: "pacientes" },
+    "Medicina":       { termo: "médico",                 plural: "médicos",                 cli: "pacientes" },
+    "Psicologia":     { termo: "psicólogo",              plural: "psicólogos",              cli: "pacientes" },
+    "Advocacia":      { termo: "advogado",               plural: "advogados",               cli: "clientes" },
+    "Fisioterapia":   { termo: "fisioterapeuta",         plural: "fisioterapeutas",         cli: "pacientes" },
+    "Nutrição":       { termo: "nutricionista",          plural: "nutricionistas",          cli: "pacientes" },
+    "Estética":       { termo: "clínica de estética",    plural: "profissionais de estética", cli: "clientes" },
+    "Educação física":{ termo: "personal trainer",       plural: "personal trainers",       cli: "alunos" },
+    "Arquitetura":    { termo: "arquiteto",              plural: "arquitetos",              cli: "clientes" },
+    "Outra":          { termo: "",                       plural: "profissionais autônomos", cli: "clientes" }
+  };
+  var $ = function (id) { return document.getElementById(id); };
+  var areaSel = $("area");
+  Object.keys(AREAS).forEach(function (a) { var o = document.createElement("option"); o.textContent = a; areaSel.appendChild(o); });
+  var termoTouched = false;
+  $("termo").value = AREAS[areaSel.value].termo;
+  $("termo").addEventListener("input", function () { termoTouched = true; });
+  areaSel.addEventListener("change", function () { if (!termoTouched) $("termo").value = AREAS[areaSel.value].termo; render(); });
+  try { $("eu").value = localStorage.getItem("prosp-eu") || ""; } catch (e) {}
+  $("eu").addEventListener("input", function () { try { localStorage.setItem("prosp-eu", $("eu").value); } catch (e) {} });
+
+  var texts = {};
+
+  function digits(s) { return (s || "").replace(/\D/g, ""); }
+
+  function data() {
+    var a = AREAS[areaSel.value];
+    var nome = $("nome").value.trim() || "[nome]";
+    var trat = $("trat").value;
+    return {
+      eu: $("eu").value.trim() || "[seu nome]",
+      nome: nome,
+      saud: trat ? trat + " " + nome : nome,
+      termo: $("termo").value.trim() || "[termo]",
+      cidade: $("cidade").value.trim() || "[cidade]",
+      plural: a.plural, cli: a.cli,
+      conc: digits($("conc").value),
+      obs: $("obs").value,
+      tel: digits($("tel").value)
+    };
+  }
+
+  function link(d) {
+    var p = new URLSearchParams();
+    if ($("nome").value.trim()) p.set("nome", $("nome").value.trim());
+    p.set("area", areaSel.value);
+    if (d.tel) p.set("tel", d.tel);
+    return location.origin + "/diagnostico?" + p.toString();
+  }
+
+  function observacao(d) {
+    var busca = "\"" + d.termo + " em " + d.cidade + "\"";
+    var c = d.conc ? d.conc : "";
+    if (d.obs === "nao") return "Pesquisei " + busca + " no Google e seu nome não aparece entre os primeiros resultados" + (c ? ", enquanto quem aparece no topo tem mais de " + c + " avaliações." : ".");
+    if (d.obs === "abaixo") return "Pesquisei " + busca + " no Google e seu perfil aparece, mas abaixo de outros profissionais da região" + (c ? ", que têm mais de " + c + " avaliações." : ".");
+    if (d.obs === "aval") return "Vi seu perfil no Google e ele tem poucas avaliações" + (c ? ", enquanto quem aparece primeiro em " + busca + " tem mais de " + c + "." : ". Isso pesa muito na hora de alguém escolher quem procurar.");
+    return "Pesquisei seu nome no Google e não encontrei uma página sua onde quem procura " + d.termo + " consiga conhecer seu trabalho e falar direto com você.";
+  }
+
+  function sequence(d, L) {
+    return [
+      { id: "s1", t: "Abertura", w: "Dia 1", m:
+        "Oi, " + d.saud + ", tudo bem? Aqui é " + d.eu + ", trabalho com captação de " + d.cli + " para " + d.plural + ".\n\n" +
+        observacao(d) + "\n\nHoje seus " + d.cli + " chegam mais pelo Google ou por indicação?" },
+      { id: "s2", t: "Quando responder: oferta do diagnóstico", w: "Após a resposta", m:
+        "Entendi, " + d.nome + ". Isso é muito comum entre " + d.plural + ".\n\n" +
+        "Montei um diagnóstico rápido, de 2 minutos, que mostra onde você está perdendo " + d.cli + " e quanto isso representa por mês. Já deixei com seu nome:\n" + L + "\n\n" +
+        "No final, se fizer sentido, a gente marca 20 minutos para eu te mostrar como resolver." },
+      { id: "s3", t: "Se não fizer o diagnóstico", w: "1 dia depois da oferta", m:
+        d.nome + ", conseguiu dar uma olhada no diagnóstico? Leva 2 minutos pelo celular e no final você vê sua nota de 0 a 100:\n" + L },
+      { id: "s4", t: "Se não responder a abertura", w: "Dia 3", m:
+        d.saud + ", só complementando: quem pesquisa \"" + d.termo + " em " + d.cidade + "\" está procurando atendimento agora. Hoje essas pessoas estão chegando nos concorrentes.\n\nFaz sentido conversarmos sobre isso?" },
+      { id: "s5", t: "Última tentativa", w: "Dia 6", m:
+        d.saud + ", vou parar de te mandar mensagem para não incomodar. Se em algum momento quiser saber onde está perdendo " + d.cli + ", o diagnóstico fica aqui, leva 2 minutos:\n" + L }
+    ];
+  }
+
+  function objections(d, L) {
+    var site = location.origin;
+    return [
+      { id: "o1", t: "\"Quanto custa?\"", m:
+        "O valor depende do tamanho do projeto, por isso eu apresento depois do diagnóstico. O que posso adiantar: é pagamento único, sem mensalidade, e dá para parcelar em até 12x.\n\nFaz o diagnóstico que em 20 minutos eu te mostro tudo: " + L },
+      { id: "o2", t: "\"Já tenho agência\" ou \"alguém já cuida disso\"", m:
+        "Ótimo, " + d.nome + ". O diagnóstico serve até para você conferir se o que está sendo feito está funcionando. Se a nota sair alta, você confirma que está em boas mãos: " + L },
+      { id: "o3", t: "\"Vivo de indicação e está bom\"", m:
+        "Que bom, indicação é sinal de trabalho bem feito. O problema é que ela não tem constância. A ideia é ter uma segunda fonte de " + d.cli + " que não dependa disso, para os meses mais fracos.\n\nO diagnóstico mostra quanto isso pode representar para você: " + L },
+      { id: "o4", t: "\"Não tenho tempo\"", m:
+        "Entendo. Por isso a gente faz toda a parte técnica, e você só acompanha. O diagnóstico leva 2 minutos e dá para fazer pelo celular agora: " + L },
+      { id: "o5", t: "\"Me manda mais informações\"", m:
+        "Claro. Aqui está tudo explicado: " + site + "\n\nMas o mais rápido é o diagnóstico, porque ele já mostra o que faz sentido no seu caso: " + L },
+      { id: "o6", t: "\"Já tentei Google e não funcionou\"", m:
+        "Faz sentido a desconfiança. Na maioria dos casos, o problema não é o Google, é a estrutura: o anúncio leva para um Instagram ou site que não gera contato, e ninguém responde rápido. A gente monta a estrutura inteira, não só o anúncio.\n\nO diagnóstico mostra onde estava o furo: " + L }
+    ];
+  }
+
+  function card(item, d) {
+    texts[item.id] = item.m;
+    var wa = d.tel ? "https://wa.me/" + (d.tel.indexOf("55") === 0 && d.tel.length > 11 ? d.tel : "55" + d.tel) + "?text=" + encodeURIComponent(item.m) : "";
+    return '<div class="card msg"><div class="msg-head"><h3>' + item.t + "</h3>" + (item.w ? '<span class="when">' + item.w + "</span>" : "") + "</div>" +
+      '<div class="bubble"></div>' +
+      '<div class="actions"><button type="button" class="btn" data-copy="' + item.id + '">Copiar</button>' +
+      '<a class="btn wa" target="_blank" rel="noopener" ' + (wa ? 'href="' + wa + '"' : 'aria-disabled="true"') + ">Abrir no WhatsApp</a></div></div>";
+  }
+
+  function fill(container, items, d) {
+    container.innerHTML = items.map(function (i) { return card(i, d); }).join("");
+    container.querySelectorAll(".bubble").forEach(function (b, k) { b.textContent = items[k].m; });
+  }
+
+  function render() {
+    var d = data(), L = link(d);
+    texts.link = L;
+    $("link").textContent = L;
+    fill($("seq"), sequence(d, L), d);
+    fill($("obj"), objections(d, L), d);
+  }
+
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-copy]");
+    if (!b) return;
+    var t = texts[b.getAttribute("data-copy")] || "";
+    var label = b.textContent;
+    function ok() { b.textContent = "Copiado"; b.classList.add("done"); setTimeout(function () { b.textContent = label; b.classList.remove("done"); }, 1400); }
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () { fallback(t); ok(); });
+    else { fallback(t); ok(); }
+  });
+  function fallback(t) {
+    var ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  $("f").addEventListener("input", render);
+  $("f").addEventListener("submit", function (e) { e.preventDefault(); });
+  render();
+})();
+</script>
+</body>
+</html>

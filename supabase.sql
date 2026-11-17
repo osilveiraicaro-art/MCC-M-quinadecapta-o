@@ -29,8 +29,12 @@ create table if not exists public.leads (
   utm_campaign text check (char_length(utm_campaign) <= 200),
   utm_term text check (char_length(utm_term) <= 200),
   gclid text check (char_length(gclid) <= 300),
-  observacoes text
+  observacoes text,
+  origem text check (char_length(origem) <= 30)
 );
+
+-- Para quem já criou a tabela antes:
+alter table public.leads add column if not exists origem text check (char_length(origem) <= 30);
 
 alter table public.leads enable row level security;
 

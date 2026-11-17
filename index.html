@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#13286B">
 <meta name="description" content="Implementação completa para profissionais autônomos: landing page, Google Meu Negócio, Google Ads, CRM e assistente de IA no WhatsApp. Pagamento único, em até 12x.">
 <meta property="og:title" content="Máquina de Captação de Clientes">
 <meta property="og:description" content="Seja encontrado no Google, atenda com IA e acompanhe cada cliente. Pagamento único, em até 12x, sem mensalidade.">
-<meta name="theme-color" content="#13286B">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Máquina de Captação de Clientes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -767,6 +767,7 @@ footer .fine{color:#B7C1DD}
   /* Supabase: preenchidos na publicação. Vazios = o diagnóstico funciona, mas não salva. */
   var SUPABASE_URL = "https://dfbmxwktvhzglallepas.supabase.co";
   var SUPABASE_KEY = "sb_publishable_Aw55OBMjnLV12hGS6YxZZA_GntsicUy";
+  var PAGE_ORIGEM = "orgânico";
   var root = document.getElementById("quiz");
   var PROFS = ["Odontologia", "Medicina", "Psicologia", "Advocacia", "Fisioterapia", "Nutrição", "Estética", "Educação física", "Arquitetura", "Outra"];
   var Q = [
@@ -817,10 +818,41 @@ footer .fine{color:#B7C1DD}
     st.saved = true;
     var h = { "apikey": SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" };
     if (SUPABASE_KEY.indexOf("eyJ") === 0) h.Authorization = "Bearer " + SUPABASE_KEY;
-    fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/leads", { method: "POST", headers: h, body: JSON.stringify(row), keepalive: true })
-      .then(function (r) { if (!r.ok) st.saved = false; })
-      .catch(function () { st.saved = false; });
+    function send(body, retry) {
+      fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/leads", { method: "POST", headers: h, body: JSON.stringify(body), keepalive: true })
+        .then(function (r) {
+          if (r.ok) return;
+          /* Se a coluna "origem" ainda não existir no Supabase, salva o lead sem ela. */
+          if (retry && r.status === 400 && "origem" in body) {
+            var b = {}; for (var k in body) if (k !== "origem") b[k] = body[k];
+            send(b, false); return;
+          }
+          st.saved = false;
+        })
+        .catch(function () { st.saved = false; });
+    }
+    send(row, true);
   }
+  function origem() {
+    var o = param("origem"); if (o) return o.slice(0, 30);
+    var m = (param("utm_medium") || "").toLowerCase();
+    if (param("gclid") || /cpc|ppc|paid|ads/.test(m)) return "anúncio";
+    if (m === "prospeccao") return "prospecção";
+    return PAGE_ORIGEM;
+  }
+  /* Link personalizado: ?nome=Ana&area=Odontologia&cidade=Florianópolis&tel=48999999999 */
+  (function prefill() {
+    var n = param("nome"), a = param("area"), c = param("cidade"), t = param("tel");
+    if (n) st.name = n.slice(0, 120);
+    if (c) st.city = c.slice(0, 80);
+    if (t) st.phone = t.replace(/\D/g, "").slice(0, 13);
+    if (a) for (var k = 0; k < PROFS.length; k++) if (PROFS[k].toLowerCase() === a.toLowerCase()) st.prof = PROFS[k];
+    var first = st.name.split(" ")[0];
+    if (first) document.querySelectorAll("[data-personal]").forEach(function (el) {
+      var base = el.getAttribute("data-personal");
+      el.textContent = first + ", " + base.charAt(0).toLowerCase() + base.slice(1);
+    });
+  })();
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function lab(o) { return Array.isArray(o) ? o[0] : o; }
@@ -909,7 +941,7 @@ footer .fine{color:#B7C1DD}
       quando_comecar: lab(ans("quando")), nota: score, pontos_criticos: weak, prioridade: tier, codigo: code,
       potencial_mensal: n * t, potencial_anual: n * t * 12,
       utm_source: param("utm_source"), utm_medium: param("utm_medium"), utm_campaign: param("utm_campaign"),
-      utm_term: param("utm_term"), gclid: param("gclid")
+      utm_term: param("utm_term"), gclid: param("gclid"), origem: origem()
     });
     var href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg);
 
@@ -936,6 +968,7 @@ footer .fine{color:#B7C1DD}
 (function () {
   var boxes = document.querySelectorAll(".checks input");
   var counter = document.getElementById("counter");
+  if (!counter || !boxes.length) return;
   function update() {
     var n = 0;
     boxes.forEach(function (b) { if (b.checked) n++; });
