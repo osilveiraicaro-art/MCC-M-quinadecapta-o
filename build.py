@@ -42,9 +42,9 @@ def page(head, body, extra_meta=""):
 
 
 # Página de vendas
-sales_meta = """<meta name="description" content="Implementação completa para profissionais autônomos: landing page, Google Meu Negócio, Google Ads, CRM e assistente de IA no WhatsApp. Pagamento único, em até 12x.">
+sales_meta = """<meta name="description" content="Sistema completo de captação para imobiliárias: landing page, Google Meu Negócio, Google Ads, CRM com funil por corretor e assistente de IA no WhatsApp. Pagamento único, em até 12x.">
 <meta property="og:title" content="Máquina de Captação de Clientes">
-<meta property="og:description" content="Seja encontrado no Google, atenda com IA e acompanhe cada cliente. Pagamento único, em até 12x, sem mensalidade.">
+<meta property="og:description" content="Clientes chegando direto para a sua imobiliária, atendidos na hora e acompanhados até o fechamento. Pagamento único, em até 12x, sem mensalidade.">
 """
 pathlib.Path("index.html").write_text(page(head_part, body_part, sales_meta))
 
@@ -64,7 +64,7 @@ diag_css = """<style>
 .dfoot .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
 .dfoot a{font-weight:700;color:var(--navy)}
 </style>"""
-title_base = "Descubra em 2 minutos onde você está perdendo clientes"
+title_base = "Descubra em 2 minutos onde sua imobiliária está perdendo clientes"
 diag_body = f"""
 
 <header class="top">
@@ -79,7 +79,7 @@ diag_body = f"""
   <div class="wrap">
     <span class="eyebrow">Diagnóstico de captação</span>
     <h1 data-personal="{title_base}">{title_base}</h1>
-    <p class="lede muted">Responda algumas perguntas rápidas. No final, você vê sua nota de 0 a 100, os pontos que estão levando clientes para o concorrente e quanto isso representa em faturamento.</p>
+    <p class="lede muted">Responda algumas perguntas rápidas. No final, você vê a nota de captação da imobiliária, os pontos que estão levando clientes para a concorrência e quanto isso representa em comissões.</p>
     <div class="pts"><span>Gratuito</span><span>Leva 2 minutos</span><span>Resultado na hora</span></div>
   </div>
 </section>
@@ -101,7 +101,7 @@ diag_body = f"""
 {script.replace('var PAGE_ORIGEM = "orgânico";', 'var PAGE_ORIGEM = "prospecção";', 1)}"""
 diag_head = head_part.replace("<title>Máquina de Captação de Clientes</title>",
                               "<title>Diagnóstico de Captação</title>", 1) + "\n" + diag_css
-diag_meta = '<meta name="robots" content="noindex">\n<meta property="og:title" content="Diagnóstico de captação de clientes">\n<meta property="og:description" content="Descubra em 2 minutos onde você está perdendo clientes.">\n'
+diag_meta = '<meta name="robots" content="noindex">\n<meta property="og:title" content="Diagnóstico de captação de clientes">\n<meta property="og:description" content="Descubra em 2 minutos onde sua imobiliária está perdendo clientes.">\n'
 pathlib.Path("diagnostico").mkdir(exist_ok=True)
 pathlib.Path("diagnostico/index.html").write_text(page(diag_head, diag_body, diag_meta))
 print("ok: index.html, diagnostico/index.html")
