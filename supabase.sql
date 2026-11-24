@@ -48,9 +48,3 @@ revoke all on public.leads from anon;
 grant insert on public.leads to anon;
 
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
-
--- Oferta para imobiliárias (novembro/2026)
-alter table public.leads add column if not exists empresa text check (char_length(empresa) <= 120);
-alter table public.leads add column if not exists corretores text check (char_length(corretores) <= 30);
-alter table public.leads add column if not exists operacao text check (char_length(operacao) <= 30);
-alter table public.leads add column if not exists gasto_portais text check (char_length(gasto_portais) <= 30);

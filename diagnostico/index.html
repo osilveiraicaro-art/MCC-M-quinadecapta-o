@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#13286B">
 <meta name="robots" content="noindex">
 <meta property="og:title" content="Diagnóstico de captação de clientes">
-<meta property="og:description" content="Descubra em 2 minutos onde sua imobiliária está perdendo clientes.">
+<meta property="og:description" content="Descubra em 2 minutos onde você está perdendo clientes.">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Diagnóstico de Captação</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -367,8 +367,8 @@ footer .fine{color:#B7C1DD}
 <section class="dhero dark">
   <div class="wrap">
     <span class="eyebrow">Diagnóstico de captação</span>
-    <h1 data-personal="Descubra em 2 minutos onde sua imobiliária está perdendo clientes">Descubra em 2 minutos onde sua imobiliária está perdendo clientes</h1>
-    <p class="lede muted">Responda algumas perguntas rápidas. No final, você vê a nota de captação da imobiliária, os pontos que estão levando clientes para a concorrência e quanto isso representa em comissões.</p>
+    <h1 data-personal="Descubra em 2 minutos onde você está perdendo clientes">Descubra em 2 minutos onde você está perdendo clientes</h1>
+    <p class="lede muted">Responda algumas perguntas rápidas. No final, você vê sua nota de 0 a 100, os pontos que estão levando clientes para o concorrente e quanto isso representa em faturamento.</p>
     <div class="pts"><span>Gratuito</span><span>Leva 2 minutos</span><span>Resultado na hora</span></div>
   </div>
 </section>
@@ -377,17 +377,17 @@ footer .fine{color:#B7C1DD}
   <div class="wrap">
     <div class="quiz" id="quiz">
       <div class="q-start">
-        <p class="q-step">12 etapas · cerca de 2 minutos</p>
-        <h3 class="q-title">Diagnóstico de captação da imobiliária</h3>
+        <p class="q-step">11 etapas · cerca de 2 minutos</p>
+        <h3 class="q-title">Seu diagnóstico de captação</h3>
         <ul class="q-preview">
           <li>Presença no Google</li>
-          <li>Site e primeira impressão</li>
-          <li>Dependência de portais</li>
+          <li>Página e primeira impressão</li>
+          <li>Fonte de novos clientes</li>
           <li>Velocidade de atendimento</li>
-          <li>Controle dos leads</li>
-          <li>Potencial em comissões</li>
+          <li>Acompanhamento de contatos</li>
+          <li>Potencial de faturamento</li>
         </ul>
-        <p class="q-sub">No final, você recebe a nota de 0 a 100 e um resumo do que resolver primeiro.</p>
+        <p class="q-sub">No final, você recebe sua nota de 0 a 100 e um resumo do que resolver primeiro.</p>
         <button type="button" class="btn" id="q-go">Começar diagnóstico
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </div>
@@ -404,7 +404,7 @@ footer .fine{color:#B7C1DD}
 </footer>
 
 <script>
-/* Diagnóstico de captação para imobiliárias: perguntas, nota, Supabase e WhatsApp */
+/* Diagnóstico de captação: perguntas, nota e envio para o WhatsApp */
 (function () {
   var WA = "5548984211819";
   var WA_LABEL = "(48) 98421-1819";
@@ -412,73 +412,51 @@ footer .fine{color:#B7C1DD}
   var SUPABASE_URL = "https://dfbmxwktvhzglallepas.supabase.co";
   var SUPABASE_KEY = "sb_publishable_Aw55OBMjnLV12hGS6YxZZA_GntsicUy";
   var PAGE_ORIGEM = "prospecção";
-  /* Colunas novas: se ainda não existirem no Supabase, o lead é salvo sem elas. */
-  var OPTIONAL_COLS = ["origem", "empresa", "corretores", "operacao", "gasto_portais"];
-
   var root = document.getElementById("quiz");
-  var CORRETORES = ["Só eu", "2 a 5", "6 a 10", "Mais de 10"];
-  var OPERACAO = ["Venda", "Locação", "Venda e locação", "Lançamentos"];
+  var PROFS = ["Odontologia", "Medicina", "Psicologia", "Advocacia", "Fisioterapia", "Nutrição", "Estética", "Educação física", "Arquitetura", "Outra"];
   var Q = [
-    { id: "fat", title: "Quanto a imobiliária fatura por mês, em média?", sub: "Só para entendermos o tamanho do projeto.",
-      opts: ["Até R$30 mil", "De R$30 a 80 mil", "De R$80 a 200 mil", "Acima de R$200 mil"] },
-    { id: "origem", title: "De onde vem a maioria dos clientes hoje?",
-      opts: [["Portais (ZAP, Viva Real, OLX)", 3], ["Indicação", 3], ["Instagram", 2], ["Google e site próprio", 0]] },
-    { id: "portais", title: "Quanto a imobiliária investe por mês em portais?",
-      opts: ["Nada", "Até R$1.000", "De R$1.000 a 3.000", "Mais de R$3.000"] },
-    { id: "google", title: "Se alguém pesquisar \"imobiliária\" e o nome da sua cidade no Google agora, vocês aparecem?",
-      opts: [["Sim, entre os primeiros", 0], ["Aparecemos, mas lá embaixo", 2], ["Não aparecemos", 3], ["Nunca verifiquei", 3]] },
-    { id: "gmn", title: "Como está o perfil da imobiliária no Google Meu Negócio?",
-      opts: [["Completo, com fotos e muitas avaliações", 0], ["Existe, mas está incompleto", 2], ["Não temos", 3], ["Não sei o que é", 3]] },
-    { id: "site", title: "Quando o cliente quer conhecer a imobiliária, para onde vai?",
-      opts: [["Um site que gera contato", 0], ["Um site antigo ou só com a lista de imóveis", 2], ["Só os portais e o Instagram", 3], ["Não temos nada próprio", 3]] },
-    { id: "resp", title: "Quanto tempo a equipe leva para responder um lead novo no WhatsApp?",
-      opts: [["Poucos minutos", 0], ["Algumas horas", 2], ["Só no dia seguinte", 3], ["Depende do corretor", 3]] },
-    { id: "crm", title: "Como você acompanha o que cada corretor faz com cada lead?",
-      opts: [["Usamos um CRM", 0], ["Numa planilha", 1], ["Cada corretor no próprio WhatsApp", 3], ["Não acompanhamos", 3]] },
-    { id: "ticket", title: "Quanto a imobiliária recebe, em média, de comissão por negócio fechado?", sub: "Considere a parte da imobiliária, em venda ou locação.",
-      opts: [["Até R$3 mil", 2000], ["De R$3 a 10 mil", 6000], ["De R$10 a 25 mil", 17000], ["Acima de R$25 mil", 30000]] },
-    { id: "meta", title: "Quantos negócios a mais por mês fariam diferença para a imobiliária?",
-      opts: [["1", 1], ["2 a 3", 2], ["4 a 6", 4], ["Mais de 6", 7]] },
-    { id: "quando", title: "Se fizer sentido, quando vocês gostariam de começar?",
+    { id: "fat", title: "Quanto você fatura por mês, em média?", sub: "Só para entendermos o tamanho do seu projeto.",
+      opts: ["Até R$10 mil", "De R$10 a 15 mil", "De R$15 a 25 mil", "Acima de R$25 mil"] },
+    { id: "origem", title: "De onde vem a maioria dos seus clientes hoje?",
+      opts: [["Indicação", 3], ["Instagram", 2], ["Google", 0], ["Não sei dizer", 3]] },
+    { id: "google", title: "Se alguém pesquisar seu serviço + sua cidade no Google agora, você aparece?",
+      opts: [["Sim, entre os primeiros", 0], ["Apareço, mas lá embaixo", 2], ["Não apareço", 3], ["Nunca verifiquei", 3]] },
+    { id: "gmn", title: "Como está seu perfil no Google Meu Negócio?",
+      opts: [["Completo, com fotos e muitas avaliações", 0], ["Existe, mas está incompleto", 2], ["Não tenho", 3], ["Não sei o que é", 3]] },
+    { id: "site", title: "Quando alguém quer saber mais sobre você, para onde vai?",
+      opts: [["Uma página feita para gerar contato", 0], ["Um site antigo", 2], ["Só o Instagram", 3], ["Não tenho nada", 3]] },
+    { id: "resp", title: "Quanto tempo você leva para responder um contato novo no WhatsApp?",
+      opts: [["Poucos minutos", 0], ["Algumas horas", 2], ["Só no dia seguinte", 3], ["Às vezes esqueço de responder", 3]] },
+    { id: "crm", title: "Como você acompanha quem entrou em contato e não fechou?",
+      opts: [["Uso um CRM", 0], ["Numa planilha", 1], ["Pelo histórico do WhatsApp", 3], ["Não acompanho", 3]] },
+    { id: "ticket", title: "Quanto vale, em média, um cliente novo para você?", sub: "Considere o que um cliente costuma pagar ao longo do tratamento ou do serviço.",
+      opts: [["Até R$500", 350], ["De R$500 a 1.500", 1000], ["De R$1.500 a 5.000", 3000], ["Acima de R$5.000", 6000]] },
+    { id: "meta", title: "Quantos clientes novos a mais por mês fariam diferença para você?",
+      opts: [["2 a 3", 2], ["4 a 6", 4], ["7 a 10", 7], ["Mais de 10", 10]] },
+    { id: "quando", title: "Se fizer sentido para você, quando gostaria de começar?",
       opts: ["Agora, o quanto antes", "Nos próximos 30 dias", "Daqui a alguns meses", "Só estou pesquisando"] }
   ];
   var PILLARS = [
     { name: "Presença no Google", keys: ["google", "gmn"], max: 6,
-      bad: "Quem procura imóvel na sua região está encontrando outra imobiliária antes da sua.",
+      bad: "Quem procura seu serviço na sua região está encontrando outro profissional antes de você.",
       fix: "Google Meu Negócio otimizado" },
-    { name: "Site e primeira impressão", keys: ["site"], max: 3,
-      bad: "O cliente interessado não encontra um lugar da imobiliária que passe confiança e leve direto ao contato.",
-      fix: "Landing page da imobiliária" },
-    { name: "Dependência de portais e indicação", keys: ["origem"], max: 3,
-      bad: "No portal, o mesmo cliente fala com várias imobiliárias ao mesmo tempo. E indicação não tem constância.",
+    { name: "Página e primeira impressão", keys: ["site"], max: 3,
+      bad: "Quem se interessa por você não encontra um lugar que passe confiança e leve direto ao contato.",
+      fix: "Landing page profissional" },
+    { name: "Fonte de novos clientes", keys: ["origem"], max: 3,
+      bad: "Sua agenda depende de indicação ou de redes sociais, e nenhuma das duas tem constância.",
       fix: "Google Ads com a primeira campanha no ar" },
     { name: "Velocidade de atendimento", keys: ["resp"], max: 3,
-      bad: "No mercado imobiliário, quem responde primeiro costuma ficar com o cliente. Cada hora sem resposta pesa.",
+      bad: "Cada hora sem resposta aumenta a chance de o contato fechar com o concorrente.",
       fix: "Assistente de IA no WhatsApp" },
-    { name: "Controle dos leads", keys: ["crm"], max: 3,
-      bad: "Sem controle por corretor, lead parado vira lead perdido, e você não sabe onde nem por quê.",
-      fix: "CRM com funil por corretor" }
+    { name: "Acompanhamento de contatos", keys: ["crm"], max: 3,
+      bad: "Quem não fecha na hora acaba esquecido, e com ele vai embora o faturamento.",
+      fix: "CRM configurado" }
   ];
   var TOTAL = Q.length + 1;
-  var st = { i: -1, a: {}, name: "", emp: "", phone: "", city: "", cor: CORRETORES[1], op: OPERACAO[2], saved: false };
+  var st = { i: -1, a: {}, name: "", phone: "", prof: PROFS[0], city: "", saved: false };
 
   function param(k) { try { return new URLSearchParams(location.search).get(k) || null; } catch (e) { return null; } }
-  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  function lab(o) { return Array.isArray(o) ? o[0] : o; }
-  function val(o) { return Array.isArray(o) ? o[1] : 0; }
-  function ans(id) { for (var k = 0; k < Q.length; k++) if (Q[k].id === id) return Q[k].opts[st.a[id]]; }
-  function brl(n) { return "R$" + Math.round(n).toLocaleString("pt-BR"); }
-  function prog(step) { return '<div class="q-prog" aria-hidden="true"><span style="width:' + Math.round(step / TOTAL * 100) + '%"></span></div><p class="q-step">Etapa ' + step + " de " + TOTAL + "</p>"; }
-  function select(id, list, cur) {
-    return '<select id="' + id + '">' + list.map(function (p) { return "<option" + (p === cur ? " selected" : "") + ">" + p + "</option>"; }).join("") + "</select>";
-  }
-  function focusTitle() {
-    var t = root.querySelector(".q-title");
-    if (t) { t.setAttribute("tabindex", "-1"); t.focus({ preventScroll: true }); }
-    var r = root.getBoundingClientRect();
-    if (r.top < 0) root.scrollIntoView({ block: "start" });
-  }
-
   function saveLead(row) {
     if (!SUPABASE_URL || !SUPABASE_KEY || st.saved) return;
     st.saved = true;
@@ -488,8 +466,9 @@ footer .fine{color:#B7C1DD}
       fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/leads", { method: "POST", headers: h, body: JSON.stringify(body), keepalive: true })
         .then(function (r) {
           if (r.ok) return;
-          if (retry && r.status === 400) {
-            var b = {}; for (var k in body) if (OPTIONAL_COLS.indexOf(k) < 0) b[k] = body[k];
+          /* Se a coluna "origem" ainda não existir no Supabase, salva o lead sem ela. */
+          if (retry && r.status === 400 && "origem" in body) {
+            var b = {}; for (var k in body) if (k !== "origem") b[k] = body[k];
             send(b, false); return;
           }
           st.saved = false;
@@ -505,13 +484,13 @@ footer .fine{color:#B7C1DD}
     if (m === "prospeccao") return "prospecção";
     return PAGE_ORIGEM;
   }
-  /* Link personalizado: ?nome=Ana&empresa=Imobiliária%20X&cidade=Florianópolis&tel=48999999999 */
+  /* Link personalizado: ?nome=Ana&area=Odontologia&cidade=Florianópolis&tel=48999999999 */
   (function prefill() {
-    var n = param("nome"), e = param("empresa"), c = param("cidade"), t = param("tel");
+    var n = param("nome"), a = param("area"), c = param("cidade"), t = param("tel");
     if (n) st.name = n.slice(0, 120);
-    if (e) st.emp = e.slice(0, 120);
     if (c) st.city = c.slice(0, 80);
     if (t) st.phone = t.replace(/\D/g, "").slice(0, 13);
+    if (a) for (var k = 0; k < PROFS.length; k++) if (PROFS[k].toLowerCase() === a.toLowerCase()) st.prof = PROFS[k];
     var first = st.name.split(" ")[0];
     if (first) document.querySelectorAll("[data-personal]").forEach(function (el) {
       var base = el.getAttribute("data-personal");
@@ -519,29 +498,38 @@ footer .fine{color:#B7C1DD}
     });
   })();
 
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function lab(o) { return Array.isArray(o) ? o[0] : o; }
+  function val(o) { return Array.isArray(o) ? o[1] : 0; }
+  function ans(id) { for (var k = 0; k < Q.length; k++) if (Q[k].id === id) return Q[k].opts[st.a[id]]; }
+  function brl(n) { return "R$" + Math.round(n).toLocaleString("pt-BR"); }
+  function prog(step) { return '<div class="q-prog" aria-hidden="true"><span style="width:' + Math.round(step / TOTAL * 100) + '%"></span></div><p class="q-step">Etapa ' + step + " de " + TOTAL + "</p>"; }
+  function focusTitle() {
+    var t = root.querySelector(".q-title");
+    if (t) { t.setAttribute("tabindex", "-1"); t.focus({ preventScroll: true }); }
+    var r = root.getBoundingClientRect();
+    if (r.top < 0) root.scrollIntoView({ block: "start" });
+  }
+
   function profile() {
+    var opts = PROFS.map(function (p) { return "<option" + (p === st.prof ? " selected" : "") + ">" + p + "</option>"; }).join("");
     root.innerHTML = prog(1) +
-      '<h3 class="q-title">Primeiro, sobre você e a imobiliária</h3><p class="q-sub">Para personalizarmos o diagnóstico.</p>' +
+      '<h3 class="q-title">Primeiro, quem é você?</h3><p class="q-sub">Para personalizarmos o seu diagnóstico.</p>' +
       '<form class="q-form" id="q-form" novalidate>' +
       '<label for="f-name">Seu nome</label><input id="f-name" autocomplete="given-name" value="' + esc(st.name) + '">' +
-      '<label for="f-emp">Nome da imobiliária</label><input id="f-emp" autocomplete="organization" value="' + esc(st.emp) + '">' +
+      '<label for="f-prof">Sua área</label><select id="f-prof">' + opts + "</select>" +
       '<label for="f-phone">Seu WhatsApp (com DDD)</label><input id="f-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(00) 00000-0000" value="' + esc(st.phone) + '">' +
-      '<label for="f-city">Cidade</label><input id="f-city" autocomplete="address-level2" value="' + esc(st.city) + '">' +
-      '<label for="f-cor">Quantos corretores atendem clientes?</label>' + select("f-cor", CORRETORES, st.cor) +
-      '<label for="f-op">Vocês trabalham mais com</label>' + select("f-op", OPERACAO, st.op) +
+      '<label for="f-city">Sua cidade</label><input id="f-city" autocomplete="address-level2" value="' + esc(st.city) + '">' +
       '<p class="q-err" id="f-err" hidden></p>' +
       '<button class="btn" type="submit">Continuar</button></form>';
     document.getElementById("q-form").addEventListener("submit", function (e) {
       e.preventDefault();
       st.name = document.getElementById("f-name").value.trim();
-      st.emp = document.getElementById("f-emp").value.trim();
-      st.phone = document.getElementById("f-phone").value.trim();
+      st.prof = document.getElementById("f-prof").value;
       st.city = document.getElementById("f-city").value.trim();
-      st.cor = document.getElementById("f-cor").value;
-      st.op = document.getElementById("f-op").value;
+      st.phone = document.getElementById("f-phone").value.trim();
       var err = document.getElementById("f-err");
       if (!st.name) { err.textContent = "Digite seu nome para continuar."; err.hidden = false; document.getElementById("f-name").focus(); return; }
-      if (!st.emp) { err.textContent = "Digite o nome da imobiliária para continuar."; err.hidden = false; document.getElementById("f-emp").focus(); return; }
       if (st.phone.replace(/\D/g, "").length < 10) { err.textContent = "Digite seu WhatsApp com DDD para continuar."; err.hidden = false; document.getElementById("f-phone").focus(); return; }
       st.i = 0; question();
     });
@@ -577,21 +565,20 @@ footer .fine{color:#B7C1DD}
       var chip = ratio >= 0.66 ? '<span class="chip crit">Crítico</span>' : ratio > 0 ? '<span class="chip attn">Atenção</span>' : '<span class="chip good">Ponto forte</span>';
       if (ratio > 0) weak.push(p.name);
       rows += '<li><div class="r-p-head"><b>' + p.name + "</b>" + chip + "</div>" +
-        (ratio > 0 ? "<p>" + p.bad + '</p><p class="r-fix">Resolvido com: <b>' + p.fix + "</b></p>" : "<p>Esse ponto já está bem resolvido. Vamos aproveitar isso a favor da imobiliária.</p>") + "</li>";
+        (ratio > 0 ? "<p>" + p.bad + '</p><p class="r-fix">Resolvido com: <b>' + p.fix + "</b></p>" : "<p>Esse ponto já está bem resolvido. Vamos aproveitar isso a seu favor.</p>") + "</li>";
     });
     var score = Math.max(5, Math.round(100 * (1 - sum / 18)));
-    var head = score < 40 ? "A captação da imobiliária está em risco" : score < 70 ? "A imobiliária está deixando clientes na mesa" : "Boa base, mas ainda há espaço para crescer";
+    var head = score < 40 ? "Sua captação de clientes está em risco" : score < 70 ? "Você está deixando clientes na mesa" : "Boa base, mas ainda há espaço para crescer";
     var n = val(ans("meta")), t = val(ans("ticket"));
     var fat = st.a.fat, quando = st.a.quando;
-    var tier = (fat >= 1 && quando <= 1) ? "A" : (fat >= 1 && quando <= 2) ? "B" : "C";
+    var tier = (fat >= 2 && quando <= 1) ? "A" : (fat >= 1 && quando <= 2) ? "B" : "C";
     var code = "MC-" + score + "-" + tier;
     var first = st.name.split(" ")[0];
 
     var msg = "Olá! Fiz o diagnóstico e quero agendar minha reunião.\n\n" +
-      "Nome: " + st.name + "\nImobiliária: " + st.emp + "\nFaturamento: " + lab(ans("fat"));
+      "Nome: " + st.name + "\nÁrea: " + st.prof + "\nFaturamento: " + lab(ans("fat"));
     saveLead({
-      nome: st.name, empresa: st.emp, whatsapp: st.phone.replace(/\D/g, ""), area: "Imobiliária", cidade: st.city || null,
-      corretores: st.cor, operacao: st.op, gasto_portais: lab(ans("portais")),
+      nome: st.name, whatsapp: st.phone.replace(/\D/g, ""), area: st.prof, cidade: st.city || null,
       faturamento: lab(ans("fat")), origem_clientes: lab(ans("origem")), aparece_google: lab(ans("google")),
       google_meu_negocio: lab(ans("gmn")), pagina: lab(ans("site")), tempo_resposta: lab(ans("resp")),
       acompanhamento: lab(ans("crm")), valor_cliente: lab(ans("ticket")), clientes_desejados: lab(ans("meta")),
@@ -603,17 +590,17 @@ footer .fine{color:#B7C1DD}
     var href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg);
 
     root.innerHTML =
-      '<p class="eyebrow">Diagnóstico da ' + esc(st.emp) + "</p>" +
+      '<p class="eyebrow">Diagnóstico de ' + esc(first) + "</p>" +
       '<div class="r-score"><div class="r-num"><strong>' + score + "</strong><span>/100</span></div>" +
       '<div><h3 class="q-title">' + head + '</h3><p class="q-sub">Encontramos <b>' + weak.length + " de 5</b> pontos onde clientes estão escapando.</p></div></div>" +
       '<div class="r-meter" aria-hidden="true"><i style="left:' + score + '%"></i></div>' +
       '<ul class="r-pillars">' + rows + "</ul>" +
-      '<div class="r-money"><p>Pelo que você respondeu, os negócios a mais que a imobiliária quer por mês representam cerca de <b>' + brl(n * t) + " em comissões por mês</b>, ou <b>" + brl(n * t * 12) + " por ano</b>.</p>" +
-      "<small>Estimativa feita com a comissão média por negócio que você informou.</small></div>" +
+      '<div class="r-money"><p>Os ' + lab(ans("meta")) + " clientes a mais que você quer por mês representam cerca de <b>" + brl(n * t) + " por mês</b>, ou <b>" + brl(n * t * 12) + " por ano</b>.</p>" +
+      "<small>Estimativa feita com o valor médio por cliente que você informou.</small></div>" +
       '<div class="r-cta"><h3>Próximo passo: sua reunião de diagnóstico</h3>' +
-      "<p>Em 20 minutos, " + esc(first) + ", mostramos como resolver cada ponto acima na sua imobiliária e apresentamos o valor do projeto. Pagamento único, em até 12x, sem mensalidade.</p>" +
+      "<p>Em 20 minutos, mostramos como resolver cada ponto acima no seu caso e apresentamos o valor do seu projeto. Pagamento único, em até 12x, sem mensalidade.</p>" +
       '<a class="btn wa" href="' + href + '" target="_blank" rel="noopener">Agendar minha reunião pelo WhatsApp</a>' +
-      '<p class="fine">O WhatsApp abre com a mensagem já escrita. É só enviar. Se não abrir, chame no <b>' + WA_LABEL + "</b>.</p>" +
+      '<p class="fine">O WhatsApp abre com o seu diagnóstico já escrito. É só enviar. Se não abrir, chame no <b>' + WA_LABEL + "</b>.</p>" +
       '<button type="button" class="q-back" id="q-redo">Refazer diagnóstico</button></div>';
     document.getElementById("q-redo").addEventListener("click", function () { st.a = {}; st.i = -1; st.saved = false; profile(); });
     focusTitle();
@@ -629,7 +616,7 @@ footer .fine{color:#B7C1DD}
   function update() {
     var n = 0;
     boxes.forEach(function (b) { if (b.checked) n++; });
-    if (n === 0) counter.textContent = "Marque o que acontece na sua imobiliária";
+    if (n === 0) counter.textContent = "Marque o que acontece com você";
     else if (n === 1) counter.textContent = "1 de 5 marcado";
     else counter.textContent = n + " de 5 marcados. Esta página foi feita para você.";
   }

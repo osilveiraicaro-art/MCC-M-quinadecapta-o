@@ -70,20 +70,23 @@ hr{border:0;border-top:1px dashed var(--line);margin:4px 0;width:100%}
     <span class="lbl">Você</span>
     <label for="eu">Seu nome<small>Fica salvo neste navegador</small><input id="eu" placeholder="Ex.: Ícaro"></label>
     <hr>
-    <span class="lbl">Imobiliária</span>
-    <label for="nome">Primeiro nome do dono ou gestor<input id="nome" placeholder="Carlos"></label>
-    <label for="emp">Nome da imobiliária<input id="emp" placeholder="Imobiliária Exemplo"></label>
-    <label for="cidade">Cidade<input id="cidade" placeholder="Florianópolis"></label>
-    <label for="termo">Termo que você pesquisou no Google<small>Muda sozinho com a cidade, mas dá para trocar</small><input id="termo"></label>
+    <span class="lbl">Contato</span>
+    <div class="row">
+      <label for="trat">Tratamento<select id="trat"><option value="">Nenhum</option><option>Dra.</option><option>Dr.</option></select></label>
+      <label for="nome">Primeiro nome<input id="nome" placeholder="Ana"></label>
+    </div>
+    <label for="area">Área<select id="area"></select></label>
+    <label for="termo">Termo que você pesquisou no Google<input id="termo"></label>
+    <label for="cidade">Cidade ou bairro<input id="cidade" placeholder="Florianópolis"></label>
     <label for="obs">O que você viu no Google
       <select id="obs">
         <option value="nao">Não aparece entre os primeiros</option>
         <option value="abaixo">Aparece, mas abaixo dos concorrentes</option>
         <option value="aval">Tem poucas avaliações</option>
-        <option value="site">Imóveis só nos portais, sem site próprio</option>
+        <option value="site">Não tem site ou página própria</option>
       </select>
     </label>
-    <label for="conc">Avaliações das imobiliárias do topo<small>Opcional. Ex.: 60</small><input id="conc" inputmode="numeric"></label>
+    <label for="conc">Avaliações dos concorrentes do topo<small>Opcional. Ex.: 40</small><input id="conc" inputmode="numeric"></label>
     <label for="tel">WhatsApp do contato<small>Opcional. Libera o botão "Abrir no WhatsApp"</small><input id="tel" type="tel" inputmode="tel" placeholder="(48) 99999-9999"></label>
   </form>
 
@@ -106,24 +109,43 @@ hr{border:0;border-top:1px dashed var(--line);margin:4px 0;width:100%}
 
 <script>
 (function () {
+  var AREAS = {
+    "Odontologia":    { termo: "dentista",               plural: "dentistas",               cli: "pacientes" },
+    "Medicina":       { termo: "médico",                 plural: "médicos",                 cli: "pacientes" },
+    "Psicologia":     { termo: "psicólogo",              plural: "psicólogos",              cli: "pacientes" },
+    "Advocacia":      { termo: "advogado",               plural: "advogados",               cli: "clientes" },
+    "Fisioterapia":   { termo: "fisioterapeuta",         plural: "fisioterapeutas",         cli: "pacientes" },
+    "Nutrição":       { termo: "nutricionista",          plural: "nutricionistas",          cli: "pacientes" },
+    "Estética":       { termo: "clínica de estética",    plural: "profissionais de estética", cli: "clientes" },
+    "Educação física":{ termo: "personal trainer",       plural: "personal trainers",       cli: "alunos" },
+    "Arquitetura":    { termo: "arquiteto",              plural: "arquitetos",              cli: "clientes" },
+    "Outra":          { termo: "",                       plural: "profissionais autônomos", cli: "clientes" }
+  };
   var $ = function (id) { return document.getElementById(id); };
+  var areaSel = $("area");
+  Object.keys(AREAS).forEach(function (a) { var o = document.createElement("option"); o.textContent = a; areaSel.appendChild(o); });
   var termoTouched = false;
-  function defaultTermo() { var c = $("cidade").value.trim(); return "imobiliária em " + (c || "[cidade]").toLowerCase(); }
-  $("termo").value = defaultTermo();
+  $("termo").value = AREAS[areaSel.value].termo;
   $("termo").addEventListener("input", function () { termoTouched = true; });
-  $("cidade").addEventListener("input", function () { if (!termoTouched) $("termo").value = defaultTermo(); });
+  areaSel.addEventListener("change", function () { if (!termoTouched) $("termo").value = AREAS[areaSel.value].termo; render(); });
   try { $("eu").value = localStorage.getItem("prosp-eu") || ""; } catch (e) {}
   $("eu").addEventListener("input", function () { try { localStorage.setItem("prosp-eu", $("eu").value); } catch (e) {} });
 
   var texts = {};
+
   function digits(s) { return (s || "").replace(/\D/g, ""); }
 
   function data() {
+    var a = AREAS[areaSel.value];
+    var nome = $("nome").value.trim() || "[nome]";
+    var trat = $("trat").value;
     return {
       eu: $("eu").value.trim() || "[seu nome]",
-      nome: $("nome").value.trim() || "[nome]",
-      emp: $("emp").value.trim() || "[imobiliária]",
+      nome: nome,
+      saud: trat ? trat + " " + nome : nome,
       termo: $("termo").value.trim() || "[termo]",
+      cidade: $("cidade").value.trim() || "[cidade]",
+      plural: a.plural, cli: a.cli,
       conc: digits($("conc").value),
       obs: $("obs").value,
       tel: digits($("tel").value)
@@ -133,35 +155,35 @@ hr{border:0;border-top:1px dashed var(--line);margin:4px 0;width:100%}
   function link(d) {
     var p = new URLSearchParams();
     if ($("nome").value.trim()) p.set("nome", $("nome").value.trim());
-    if ($("emp").value.trim()) p.set("empresa", $("emp").value.trim());
+    p.set("area", areaSel.value);
     if (d.tel) p.set("tel", d.tel);
     return location.origin + "/diagnostico?" + p.toString();
   }
 
   function observacao(d) {
-    var busca = "\"" + d.termo + "\"";
-    var c = d.conc;
-    if (d.obs === "nao") return "Pesquisei " + busca + " no Google e a " + d.emp + " não aparece entre os primeiros resultados" + (c ? ", enquanto as imobiliárias do topo têm mais de " + c + " avaliações." : ".");
-    if (d.obs === "abaixo") return "Pesquisei " + busca + " no Google e a " + d.emp + " aparece, mas abaixo de outras imobiliárias da região" + (c ? ", que têm mais de " + c + " avaliações." : ".");
-    if (d.obs === "aval") return "Vi o perfil da " + d.emp + " no Google e ele tem poucas avaliações" + (c ? ", enquanto quem aparece primeiro em " + busca + " tem mais de " + c + "." : ". Isso pesa muito na hora de o cliente escolher para quem ligar.");
-    return "Procurei a " + d.emp + " no Google e encontrei os imóveis só nos portais, sem uma página própria onde o cliente fale direto com vocês.";
+    var busca = "\"" + d.termo + " em " + d.cidade + "\"";
+    var c = d.conc ? d.conc : "";
+    if (d.obs === "nao") return "Pesquisei " + busca + " no Google e seu nome não aparece entre os primeiros resultados" + (c ? ", enquanto quem aparece no topo tem mais de " + c + " avaliações." : ".");
+    if (d.obs === "abaixo") return "Pesquisei " + busca + " no Google e seu perfil aparece, mas abaixo de outros profissionais da região" + (c ? ", que têm mais de " + c + " avaliações." : ".");
+    if (d.obs === "aval") return "Vi seu perfil no Google e ele tem poucas avaliações" + (c ? ", enquanto quem aparece primeiro em " + busca + " tem mais de " + c + "." : ". Isso pesa muito na hora de alguém escolher quem procurar.");
+    return "Pesquisei seu nome no Google e não encontrei uma página sua onde quem procura " + d.termo + " consiga conhecer seu trabalho e falar direto com você.";
   }
 
   function sequence(d, L) {
     return [
       { id: "s1", t: "Abertura", w: "Dia 1", m:
-        "Oi, " + d.nome + ", tudo bem? Aqui é " + d.eu + ", trabalho com captação de clientes para imobiliárias.\n\n" +
-        observacao(d) + "\n\nHoje a maior parte dos clientes da " + d.emp + " chega pelos portais ou por indicação?" },
+        "Oi, " + d.saud + ", tudo bem? Aqui é " + d.eu + ", trabalho com captação de " + d.cli + " para " + d.plural + ".\n\n" +
+        observacao(d) + "\n\nHoje seus " + d.cli + " chegam mais pelo Google ou por indicação?" },
       { id: "s2", t: "Quando responder: oferta do diagnóstico", w: "Após a resposta", m:
-        "Entendi, " + d.nome + ". Isso é muito comum: no portal, o mesmo cliente fala com cinco imobiliárias ao mesmo tempo.\n\n" +
-        "Montei um diagnóstico rápido, de 2 minutos, que mostra onde a " + d.emp + " está perdendo clientes e quanto isso representa em comissões por mês. Já deixei com seu nome:\n" + L + "\n\n" +
+        "Entendi, " + d.nome + ". Isso é muito comum entre " + d.plural + ".\n\n" +
+        "Montei um diagnóstico rápido, de 2 minutos, que mostra onde você está perdendo " + d.cli + " e quanto isso representa por mês. Já deixei com seu nome:\n" + L + "\n\n" +
         "No final, se fizer sentido, a gente marca 20 minutos para eu te mostrar como resolver." },
       { id: "s3", t: "Se não fizer o diagnóstico", w: "1 dia depois da oferta", m:
-        d.nome + ", conseguiu dar uma olhada no diagnóstico? Leva 2 minutos pelo celular e no final você vê a nota de captação da " + d.emp + ":\n" + L },
+        d.nome + ", conseguiu dar uma olhada no diagnóstico? Leva 2 minutos pelo celular e no final você vê sua nota de 0 a 100:\n" + L },
       { id: "s4", t: "Se não responder a abertura", w: "Dia 3", m:
-        d.nome + ", só complementando: quem pesquisa \"" + d.termo + "\" no Google quer falar com uma imobiliária agora, sem passar pelo portal. Hoje esses clientes estão chegando nos concorrentes.\n\nFaz sentido conversarmos sobre isso?" },
+        d.saud + ", só complementando: quem pesquisa \"" + d.termo + " em " + d.cidade + "\" está procurando atendimento agora. Hoje essas pessoas estão chegando nos concorrentes.\n\nFaz sentido conversarmos sobre isso?" },
       { id: "s5", t: "Última tentativa", w: "Dia 6", m:
-        d.nome + ", vou parar de te mandar mensagem para não incomodar. Se em algum momento quiser saber onde a " + d.emp + " está perdendo clientes, o diagnóstico fica aqui, leva 2 minutos:\n" + L }
+        d.saud + ", vou parar de te mandar mensagem para não incomodar. Se em algum momento quiser saber onde está perdendo " + d.cli + ", o diagnóstico fica aqui, leva 2 minutos:\n" + L }
     ];
   }
 
@@ -169,17 +191,17 @@ hr{border:0;border-top:1px dashed var(--line);margin:4px 0;width:100%}
     var site = location.origin;
     return [
       { id: "o1", t: "\"Quanto custa?\"", m:
-        "O valor depende do tamanho do projeto, por isso eu apresento depois do diagnóstico. O que posso adiantar: é pagamento único, sem mensalidade, e dá para parcelar em até 12x. Muitas vezes, uma comissão já cobre.\n\nFaz o diagnóstico que em 20 minutos eu te mostro tudo: " + L },
-      { id: "o2", t: "\"Já anunciamos nos portais\"", m:
-        "Ótimo, portal é importante e não precisa sair. O ponto é que lá o mesmo cliente fala com várias imobiliárias ao mesmo tempo. A ideia é ter uma fonte de clientes que chegam direto para a " + d.emp + ", sem dividir.\n\nO diagnóstico mostra quanto isso pode representar: " + L },
-      { id: "o3", t: "\"Já temos site\"", m:
-        "Que bom. A pergunta é se ele gera contato ou só mostra a lista de imóveis. O diagnóstico ajuda a ver isso, e se a nota sair alta você confirma que está tudo certo: " + L },
-      { id: "o4", t: "\"Já temos agência\" ou \"alguém já cuida disso\"", m:
+        "O valor depende do tamanho do projeto, por isso eu apresento depois do diagnóstico. O que posso adiantar: é pagamento único, sem mensalidade, e dá para parcelar em até 12x.\n\nFaz o diagnóstico que em 20 minutos eu te mostro tudo: " + L },
+      { id: "o2", t: "\"Já tenho agência\" ou \"alguém já cuida disso\"", m:
         "Ótimo, " + d.nome + ". O diagnóstico serve até para você conferir se o que está sendo feito está funcionando. Se a nota sair alta, você confirma que está em boas mãos: " + L },
-      { id: "o5", t: "\"Não tenho tempo\"", m:
-        "Entendo, imobiliária não para. Por isso a gente faz toda a parte técnica, e o assistente de IA ainda tira trabalho dos corretores. O diagnóstico leva 2 minutos pelo celular: " + L },
-      { id: "o6", t: "\"Me manda mais informações\"", m:
-        "Claro. Aqui está tudo explicado: " + site + "\n\nMas o mais rápido é o diagnóstico, porque ele já mostra o que faz sentido no caso da " + d.emp + ": " + L }
+      { id: "o3", t: "\"Vivo de indicação e está bom\"", m:
+        "Que bom, indicação é sinal de trabalho bem feito. O problema é que ela não tem constância. A ideia é ter uma segunda fonte de " + d.cli + " que não dependa disso, para os meses mais fracos.\n\nO diagnóstico mostra quanto isso pode representar para você: " + L },
+      { id: "o4", t: "\"Não tenho tempo\"", m:
+        "Entendo. Por isso a gente faz toda a parte técnica, e você só acompanha. O diagnóstico leva 2 minutos e dá para fazer pelo celular agora: " + L },
+      { id: "o5", t: "\"Me manda mais informações\"", m:
+        "Claro. Aqui está tudo explicado: " + site + "\n\nMas o mais rápido é o diagnóstico, porque ele já mostra o que faz sentido no seu caso: " + L },
+      { id: "o6", t: "\"Já tentei Google e não funcionou\"", m:
+        "Faz sentido a desconfiança. Na maioria dos casos, o problema não é o Google, é a estrutura: o anúncio leva para um Instagram ou site que não gera contato, e ninguém responde rápido. A gente monta a estrutura inteira, não só o anúncio.\n\nO diagnóstico mostra onde estava o furo: " + L }
     ];
   }
 
