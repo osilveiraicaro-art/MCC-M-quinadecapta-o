@@ -42,9 +42,9 @@ def page(head, body, extra_meta=""):
 
 
 # Página de vendas
-sales_meta = """<meta name="description" content="Implementação completa para profissionais autônomos: landing page, Google Meu Negócio, Google Ads, CRM e assistente de IA no WhatsApp. Pagamento único, em até 12x.">
+sales_meta = """<meta name="description" content="Sistema de captação sob medida para profissionais autônomos: landing page, Google Meu Negócio, Google Ads, CRM e assistente de IA no WhatsApp, com gestão mensal.">
 <meta property="og:title" content="Máquina de Captação de Clientes">
-<meta property="og:description" content="Seja encontrado no Google, atenda com IA e acompanhe cada cliente. Pagamento único, em até 12x, sem mensalidade.">
+<meta property="og:description" content="Seja encontrado no Google, atenda com IA e acompanhe cada cliente. Projeto sob medida, no ar em 30 dias.">
 """
 pathlib.Path("index.html").write_text(page(head_part, body_part, sales_meta))
 
@@ -93,7 +93,7 @@ diag_body = f"""
 
 <footer class="dfoot">
   <div class="wrap">
-    <span class="fine">Máquina de Captação de Clientes · pagamento único, em até 12x</span>
+    <span class="fine">Máquina de Captação de Clientes · projeto sob medida, com gestão mensal</span>
     <a href="/">Conhecer a solução completa</a>
   </div>
 </footer>
