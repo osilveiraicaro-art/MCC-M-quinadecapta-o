@@ -323,8 +323,24 @@ footer{padding-block:30px;background:var(--navy-deep)}
 footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer .fine{color:#B7C1DD}
 
+/* Economia: 4 profissionais em um só */
+.econ{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:center}
+.econ > *{min-width:0}
+.bill{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,3vw,30px);display:flex;flex-direction:column}
+.bill-row{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:14px 0;border-bottom:1px dashed var(--line)}
+.bill-row b{font-weight:700}
+.bill-row small{grid-column:1;color:var(--muted);font-size:.88rem}
+.bill-row .v{grid-row:1 / span 2;grid-column:2;align-self:center;font-family:var(--f-mono);font-size:.92rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bill-row .ia{display:inline-block;margin-top:6px;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;background:var(--yellow);color:var(--yellow-ink);padding:3px 8px;border-radius:99px;font-weight:700}
+.bill-row.extra b{color:var(--muted);font-weight:600}
+.bill-total{display:grid;grid-template-columns:1fr auto;gap:16px;padding:18px 0 14px;font-weight:800;font-size:1.05rem}
+.bill-total .v{font-family:var(--f-mono);color:#FF6B6F;white-space:nowrap}
+.bill-us{background:var(--yellow);color:var(--yellow-ink);border-radius:14px;padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;font-weight:800}
+.bill-us span{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.econ-num{font-family:var(--f-display);font-weight:900;font-size:clamp(4.5rem,10vw,7rem);line-height:.9;letter-spacing:-.05em;color:var(--pop)}
+
 @media (max-width:900px){
-  .hero .wrap,.split,.virada,.diag-grid,.panel,.guar-grid,.final-grid{grid-template-columns:1fr;gap:40px}
+  .hero .wrap,.split,.virada,.diag-grid,.panel,.guar-grid,.final-grid,.econ{grid-template-columns:1fr;gap:40px}
   .panel-head{position:static}
   .pay,.bonus{grid-template-columns:1fr}
   .timeline{grid-template-columns:1fr 1fr;row-gap:36px}
@@ -338,6 +354,7 @@ footer .fine{color:#B7C1DD}
   .btn{width:100%}
   .top .btn{width:auto}
   .r-score{grid-template-columns:1fr;gap:8px}
+  .bill-us,.bill-total{grid-template-columns:1fr;gap:4px}
 }
 </style>
 <style>
